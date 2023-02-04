@@ -75,12 +75,26 @@ namespace Containers
 		Alloc<ControlBlock> Alloc_;
 		using ControlBlockAllocTr = std::allocator_traits<decltype(ControlBlockAlloc_)>;
 
+		Node* FakeRoot_;
+		ControlBlock* EndControlBlock_;
+		size_type Count_;
+
 		Node* CreateNode();
 		TEM_U Node* CreateNode(U&& value);
 		ControlBlock* CreateControlBlock();
 		Node* GetGrandParent(Node* node);
 		Node* GetUncle(Node* node);
 		Node* GetBrother(Node* node);
+		Node* GetLeftBottomNode(Node* node);
+		Node* GetRightBottomNode(Node* node);
+		void RotateLeft(Node* node);
+		void RotateRight(Node* node);
+		void InsertCase1(Node* node);
+		void InsertCase2(Node* node);
+		void InsertCase3(Node* node);
+		void InsertCase4(Node* node);
+		void InsertCase5(Node* node);
+		void (Node* node);
 
 	public:
 		using const_iterator = common_iterator<true>;
@@ -94,5 +108,10 @@ namespace Containers
 		const_iterator cend() const;
 		const_iterator cbegin();
 		const_iterator cend();
+		iterator begin() const;
+		iterator end() const;
+		iterator begin();
+		iterator end();
+		void Clear();
 	};
 }
