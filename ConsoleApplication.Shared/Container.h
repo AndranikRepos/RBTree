@@ -67,6 +67,19 @@ namespace Containers
 			ControlBlock* ControlBlock_;
 			common_iterator(Container<T, Alloc>& cont, std::stack<Node*>&& st)
 				noexcept(std::is_nothrow_move_constructible_v<std::stack<Node*>>);
+			void MoveNext();
+			void MovePrev();
+
+		public:
+			TEM_CONT_DEF common_iterator(Cont& cont);
+			TEM_CONT_DEF common_iterator(Cont& cont, bool);
+			std::conditional_t<IsConst, const_reference, reference> operator*();
+			std::conditional_t<IsConst, const common_iterator<IsConst>&, common_iterator<IsConst>&> operator++();
+			common_iterator<IsConst> operator++(int);
+			std::conditional_t<IsConst, const common_iterator<IsConst>&, common_iterator<IsConst>&> operator--();
+			common_iterator<IsConst> operator--(int);
+			bool operator!=(const common_iterator<IsConst>& iter);
+			bool operator==(const common_iterator<IsConst>& iter);
 		};
 
 		Alloc<Node> Alloc_;
@@ -94,7 +107,18 @@ namespace Containers
 		void InsertCase3(Node* node);
 		void InsertCase4(Node* node);
 		void InsertCase5(Node* node);
-		void (Node* node);
+		__forceinline void IsLeaf(Node* node);
+		void DeleteWithTwoChild(Node* node);
+		void DeleteWithOneChild(Node* node);
+		void DeleteWithoutChild(Node* node);
+		void DeleteCase1(Node* node);
+		void DeleteCase2(Node* node);
+		void DeleteCase3(Node* node);
+		void DeleteCase4(Node* node);
+		void DeleteCase5(Node* node);
+		void DeleteCase6(Node* node);
+		void ReplaceNode(Node* node);
+		void CompleteReplaceNode(Node* node);
 
 	public:
 		using const_iterator = common_iterator<true>;
