@@ -31,5 +31,9 @@
 *.out
 *.app
 
+*.git
+
+.git/
+.vs/
 x32/
 x64/
