@@ -157,30 +157,98 @@ namespace Containers
 
 	TEM typename Container<T, Alloc>::Node* Container<T, Alloc>::GetLeftBottomNode(Node* node)
 	{
+		if (!node->Left_) return nullptr;
+
+		node = node->Left_;
+
+		while (node->Right_)
+			node = node->Right_;
+
+		return node;
 	}
 
 	TEM typename Container<T, Alloc>::Node* Container<T, Alloc>::GetRightBottomNode(Node* node)
 	{
+		if (!node->Right_) return nullptr;
+
+		node = node->Right_;
+
+		while (node->Left_)
+			node = node->Left_;
+
+		return node;
 	}
 
 	TEM void Container<T, Alloc>::RotateLeft(Node* node)
 	{
+		Node* pivot = node->Right_;
+		pivot->Parent_ = node->Parent_;
+
+		if (node->Parent_->Left_ == node)
+			node->Parent_->Left_ = pivot;
+		else
+			node->Parent_->Right_ = pivot;
+
+		node->Right_ = pivot->Left_;
+		if (node->Right_) node->Right_->Parent_ = node;
+		pivot->Left_ = node;
+		node->Parent_ = pivot;
 	}
 
 	TEM void Container<T, Alloc>::RotateRight(Node* node)
 	{
+		Node* pivot = node->Left_;
+		pivot->Parent_ = node->Parent_;
+
+		if (node->Parent_->Left_ == node)
+			node->Parent_->Left_ = pivot;
+		else
+			node->Parent_->Right_ = pivot;
+
+		node->Left_ = pivot->Right_;
+		if (node->Left_) node->Left_->Parent_ = node;
+		pivot->Right_ = node;
+		node->Parent_ = pivot;
 	}
 
 	TEM void Container<T, Alloc>::InsertCase1(Node* node)
 	{
+		if (node->Parent_ == FakeRoot_)
+			node->IsMid_ = true;
+		else
+			InsertCase2(node);
 	}
 
 	TEM void Container<T, Alloc>::InsertCase2(Node* node)
 	{
+		if (node->Parent_->IsMid_)
+			return;
+		else
+			InsertCase3(node);
 	}
 
 	TEM void Container<T, Alloc>::InsertCase3(Node* node)
 	{
+		Node* uncle;
+
+		while ((uncle = GetUncle(node)) && !uncle->IsMid_)
+		{
+			node->Parent_->IsMid_ = true;
+			uncle->IsMid_ = true;
+			Node* gp = GetGrandParent(node);
+			gp->IsMid_ = false;
+			node = gp;
+
+			if (node->Parent_ == FakeRoot_)
+			{
+				node->IsMid_ = true;
+				return;
+			}
+			if (node->Parent_->IsMid_)
+				return;
+		}
+
+		InsertCase4(node);
 	}
 
 	TEM void Container<T, Alloc>::InsertCase4(Node* node)
@@ -191,8 +259,9 @@ namespace Containers
 	{
 	}
 
-	TEM __forceinline bool Container<T, Alloc>::IsLeaf(Node* node)
+	TEM bool Container<T, Alloc>::IsLeaf(Node* node)
 	{
+		return !node;
 	}
 
 	TEM void Container<T, Alloc>::DeleteWithTwoChild(Node* node)
