@@ -253,6 +253,7 @@ namespace Containers
 
 	TEM void Container<T, Alloc>::InsertCase4(Node* node)
 	{
+		Node* gp = GetGrandParent(node);
 	}
 
 	TEM void Container<T, Alloc>::InsertCase5(Node* node)
@@ -305,6 +306,11 @@ namespace Containers
 	}
 
 	TEM void Container<T, Alloc>::CompleteReplaceNode(Node* first, Node* second)
+	{
+	}
+
+	TEM TEM_IS_CONST Container<T, Alloc>::common_iterator<IsConst>::common_iterator(Container<T, Alloc>& cont, std::stack<Node*>&& st)
+		noexcept(std::is_nothrow_move_constructible_v<std::stack<Node*>>)
 	{
 	}
 }
