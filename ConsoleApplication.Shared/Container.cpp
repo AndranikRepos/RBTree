@@ -313,4 +313,63 @@ namespace Containers
 		noexcept(std::is_nothrow_move_constructible_v<std::stack<Node*>>)
 	{
 	}
+
+	TEM TEM_IS_CONST TEM_CONT Container<T, Alloc>::common_iterator<IsConst>::common_iterator(Cont& cont)
+	{
+	}
+
+	TEM TEM_IS_CONST TEM_CONT Container<T, Alloc>::common_iterator<IsConst>::common_iterator(Cont& cont, bool)
+	{
+	}
+
+	TEM TEM_IS_CONST std::conditional_t<IsConst, typename Container<T, Alloc>::const_reference,
+		typename Container<T, Alloc>::reference>
+		Container<T, Alloc>::common_iterator<IsConst>::operator*()
+	{
+	}
+
+	TEM TEM_IS_CONST std::conditional_t<IsConst, const typename Container<T, Alloc>::template common_iterator<IsConst>&,
+		typename Container<T, Alloc>::template common_iterator<IsConst>&>
+		Container<T, Alloc>::common_iterator<IsConst>::operator++()
+	{
+	}
+
+	TEM TEM_IS_CONST typename Container<T, Alloc>::template common_iterator<IsConst>
+		Container<T, Alloc>::common_iterator<IsConst>::operator++(int)
+	{
+	}
+
+	TEM TEM_IS_CONST std::conditional_t<IsConst, const typename Container<T, Alloc>::template common_iterator<IsConst>&,
+		typename Container<T, Alloc>::template common_iterator<IsConst>&>
+		Container<T, Alloc>::common_iterator<IsConst>::operator--()
+	{
+	}
+
+	TEM TEM_IS_CONST typename Container<T, Alloc>::template common_iterator<IsConst>
+		Container<T, Alloc>::common_iterator<IsConst>::operator--(int)
+	{
+	}
+
+	TEM TEM_IS_CONST bool Container<T, Alloc>::common_iterator<IsConst>::operator!=(const common_iterator<IsConst>& iter)
+	{
+	}
+
+	TEM TEM_IS_CONST bool Container<T, Alloc>::common_iterator<IsConst>::operator==(const common_iterator<IsConst>& iter)
+	{
+	}
+
+	TEM TEM_IS_CONST Container<T, Alloc>::common_iterator<IsConst>::common_iterator(Container<T, Alloc>& cont, std::stack<Node*>&& st)
+		noexcept(std::is_nothrow_move_constructible_v<std::stack<Node*>>)
+	{
+	}
+
+	TEM TEM_IS_CONST Container<T, Alloc>::common_iterator<IsConst>::common_iterator(Container<T, Alloc>& cont, std::stack<Node*>&& st)
+		noexcept(std::is_nothrow_move_constructible_v<std::stack<Node*>>)
+	{
+	}
+
+	TEM TEM_IS_CONST Container<T, Alloc>::common_iterator<IsConst>::common_iterator(Container<T, Alloc>& cont, std::stack<Node*>&& st)
+		noexcept(std::is_nothrow_move_constructible_v<std::stack<Node*>>)
+	{
+	}
 }

@@ -69,6 +69,7 @@ namespace Containers
 				noexcept(std::is_nothrow_move_constructible_v<std::stack<Node*>>);
 			void MoveNext();
 			void MovePrev();
+			Node* operator&();
 
 		public:
 			TEM_CONT_DEF common_iterator(Cont& cont);
