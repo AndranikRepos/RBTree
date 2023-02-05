@@ -107,7 +107,7 @@ namespace Containers
 		void InsertCase3(Node* node);
 		void InsertCase4(Node* node);
 		void InsertCase5(Node* node);
-		__forceinline void IsLeaf(Node* node);
+		__forceinline bool IsLeaf(Node* node);
 		void DeleteWithTwoChild(Node* node);
 		void DeleteWithOneChild(Node* node);
 		void DeleteWithoutChild(Node* node);
@@ -117,8 +117,8 @@ namespace Containers
 		void DeleteCase4(Node* node);
 		void DeleteCase5(Node* node);
 		void DeleteCase6(Node* node);
-		void ReplaceNode(Node* node);
-		void CompleteReplaceNode(Node* node);
+		void ReplaceNode(Node* first, Node* second);
+		void CompleteReplaceNode(Node* first, Node* second);
 
 	public:
 		using const_iterator = common_iterator<true>;
