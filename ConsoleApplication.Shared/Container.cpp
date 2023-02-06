@@ -115,7 +115,7 @@ namespace Containers
 
 		try
 		{
-			ControlBlockAllocTr::construct(ControlBlockAlloc_, controlBlock);
+			ControlBlockAllocTr::construct(ControlBlockAlloc_, controlBlock, *this);
 		}
 		catch (std::exception& ex)
 		{
@@ -341,6 +341,33 @@ namespace Containers
 			ControlBlockAllocTr::destroy(ControlBlock_->Cont_.ControlBlockAlloc_, ControlBlock_);
 			ControlBlockAllocTr::deallocate(ControlBlock_->Cont_.ControlBlockAlloc_, ControlBlock_, 1);
 		}
+	}
+
+	TEM TEM_IS_CONST Container<T, Alloc>::common_iterator<IsConst>::common_iterator(const common_iterator<IsConst>& iter)
+	{
+		if (iter.ControlBlock_ == iter.ControlBlock_->Cont_.EndControlBlock_)
+		{
+			ControlBlock_ = iter.ControlBlock_;
+		}
+		else
+		{
+			ControlBlock_ = iter.ControlBlock_->Cont_.CreateControlBlock();
+			ControlBlock_->Stack_{ iter.ControlBlock_->Stack_ };
+		}
+	}
+
+	TEM TEM_IS_CONST Container<T, Alloc>::common_iterator<IsConst>::common_iterator(common_iterator<IsConst>&& iter) noexcept
+	{
+	}
+
+	TEM TEM_IS_CONST typename Container<T, Alloc>::template common_iterator<IsConst>&
+		Container<T, Alloc>::common_iterator<IsConst>::operator=(const common_iterator<IsConst>& iter)
+	{
+	}
+
+	TEM TEM_IS_CONST typename Container<T, Alloc>::template common_iterator<IsConst>&
+		Container<T, Alloc>::common_iterator<IsConst>::operator=(common_iterator<IsConst>&& iter) noexcept
+	{
 	}
 
 	TEM TEM_IS_CONST std::conditional_t<IsConst, typename Container<T, Alloc>::const_reference,

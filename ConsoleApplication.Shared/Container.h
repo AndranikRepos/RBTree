@@ -75,9 +75,9 @@ namespace Containers
 			TEM_CONT_DEF common_iterator(Cont& cont);
 			TEM_CONT_DEF common_iterator(Cont& cont, bool);
 			common_iterator(const common_iterator<IsConst>& iter);
-			common_iterator(const common_iterator<IsConst>& iter) noexcept;
-			common_iterator(const common_iterator<IsConst>& iter);
-			common_iterator(const common_iterator<IsConst>& iter);
+			common_iterator(common_iterator<IsConst>&& iter) noexcept;
+			common_iterator<IsConst>& operator=(const common_iterator<IsConst>& iter);
+			common_iterator<IsConst>& operator=(common_iterator<IsConst>&& iter) noexcept;
 			~common_iterator();
 			std::conditional_t<IsConst, const_reference, reference> operator*();
 			std::conditional_t<IsConst, const common_iterator<IsConst>&, common_iterator<IsConst>&> operator++();
