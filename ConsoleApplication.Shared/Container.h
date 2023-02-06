@@ -61,7 +61,7 @@ namespace Containers
 			ControlBlock(Container<T, Alloc>& cont, std::stack<Node*>&& st) noexcept(std::is_nothrow_move_constructible_v<std::stack<Node*>>);
 		};
 
-		TEM_IS_CONST class DLLEXPORT common_iterator
+		TEM_IS_CONST class DLLEXPORT common_iterator final
 		{
 			friend class Container<T, Alloc>;
 			ControlBlock* ControlBlock_;
@@ -74,6 +74,11 @@ namespace Containers
 		public:
 			TEM_CONT_DEF common_iterator(Cont& cont);
 			TEM_CONT_DEF common_iterator(Cont& cont, bool);
+			common_iterator(const common_iterator<IsConst>& iter);
+			common_iterator(const common_iterator<IsConst>& iter) noexcept;
+			common_iterator(const common_iterator<IsConst>& iter);
+			common_iterator(const common_iterator<IsConst>& iter);
+			~common_iterator();
 			std::conditional_t<IsConst, const_reference, reference> operator*();
 			std::conditional_t<IsConst, const common_iterator<IsConst>&, common_iterator<IsConst>&> operator++();
 			common_iterator<IsConst> operator++(int);

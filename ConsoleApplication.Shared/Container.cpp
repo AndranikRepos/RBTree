@@ -310,16 +310,37 @@ namespace Containers
 	}
 
 	TEM TEM_IS_CONST Container<T, Alloc>::common_iterator<IsConst>::common_iterator(Container<T, Alloc>& cont, std::stack<Node*>&& st)
-		noexcept(std::is_nothrow_move_constructible_v<std::stack<Node*>>)
+		noexcept(std::is_nothrow_move_constructible_v<std::stack<Node*>>) : Cont_{ cont }
 	{
+		ControlBlock_ = cont.CreateControlBlock();
+		ControlBlock_->Stack_ = std::move(st);
 	}
 
 	TEM TEM_IS_CONST TEM_CONT Container<T, Alloc>::common_iterator<IsConst>::common_iterator(Cont& cont)
 	{
+		ControlBlock_ = const_cast<std::decay_t<Cont>&>(cont).CreateControlBlock();
+		ControlBlock_->Stack_.push(FakeRoot_);
+		Node* node = cont.FakeRoot_;
+
+		while (node)
+		{
+			ControlBlock_->Stack_.push(node);
+			node = node->Left_;
+		}
 	}
 
 	TEM TEM_IS_CONST TEM_CONT Container<T, Alloc>::common_iterator<IsConst>::common_iterator(Cont& cont, bool)
 	{
+		ControlBlock_ = cont.EndControlBlock_;
+	}
+
+	TEM TEM_IS_CONST Container<T, Alloc>::common_iterator<IsConst>::~common_iterator()
+	{
+		if (ControlBlock_ != ControlBlock_->Cont_.EndControlBlock_)
+		{
+			ControlBlockAllocTr::destroy(ControlBlock_->Cont_.ControlBlockAlloc_, ControlBlock_);
+			ControlBlockAllocTr::deallocate(ControlBlock_->Cont_.ControlBlockAlloc_, ControlBlock_, 1);
+		}
 	}
 
 	TEM TEM_IS_CONST std::conditional_t<IsConst, typename Container<T, Alloc>::const_reference,
@@ -333,11 +354,16 @@ namespace Containers
 		typename Container<T, Alloc>::template common_iterator<IsConst>&>
 		Container<T, Alloc>::common_iterator<IsConst>::operator++()
 	{
+		MoveNext();
+		return *this;
 	}
 
 	TEM TEM_IS_CONST typename Container<T, Alloc>::template common_iterator<IsConst>
 		Container<T, Alloc>::common_iterator<IsConst>::operator++(int)
 	{
+		auto iter = *this;
+		operator++();
+		return iter;
 	}
 
 	TEM TEM_IS_CONST std::conditional_t<IsConst, const typename Container<T, Alloc>::template common_iterator<IsConst>&,
