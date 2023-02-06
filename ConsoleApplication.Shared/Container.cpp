@@ -326,6 +326,7 @@ namespace Containers
 		typename Container<T, Alloc>::reference>
 		Container<T, Alloc>::common_iterator<IsConst>::operator*()
 	{
+		return ControlBlock_->Stack_.top().Value_;
 	}
 
 	TEM TEM_IS_CONST std::conditional_t<IsConst, const typename Container<T, Alloc>::template common_iterator<IsConst>&,
@@ -358,18 +359,15 @@ namespace Containers
 	{
 	}
 
-	TEM TEM_IS_CONST Container<T, Alloc>::common_iterator<IsConst>::common_iterator(Container<T, Alloc>& cont, std::stack<Node*>&& st)
-		noexcept(std::is_nothrow_move_constructible_v<std::stack<Node*>>)
+	TEM TEM_IS_CONST void Container<T, Alloc>::common_iterator<IsConst>::MoveNext()
 	{
 	}
 
-	TEM TEM_IS_CONST Container<T, Alloc>::common_iterator<IsConst>::common_iterator(Container<T, Alloc>& cont, std::stack<Node*>&& st)
-		noexcept(std::is_nothrow_move_constructible_v<std::stack<Node*>>)
+	TEM TEM_IS_CONST void Container<T, Alloc>::common_iterator<IsConst>::MovePrev()
 	{
 	}
 
-	TEM TEM_IS_CONST Container<T, Alloc>::common_iterator<IsConst>::common_iterator(Container<T, Alloc>& cont, std::stack<Node*>&& st)
-		noexcept(std::is_nothrow_move_constructible_v<std::stack<Node*>>)
+	TEM TEM_IS_CONST typename Container<T, Alloc>::Node* Container<T, Alloc>::common_iterator<IsConst>::operator&()
 	{
 	}
 }
