@@ -254,10 +254,32 @@ namespace Containers
 	TEM void Container<T, Alloc>::InsertCase4(Node* node)
 	{
 		Node* gp = GetGrandParent(node);
+
+		if (gp)
+		{
+			if (node->Parent_->Right_ == node && gp->Left_ == node->Parent_)
+			{
+				RotateLeft(node->Parent_);
+				node = node->Left_;
+			}
+			else if (node->Parent_->Left_ == node && gp->Right_ == node->Parent_)
+			{
+				RotateLeft(node->Parent_);
+				node = node->Right_;
+			}
+		}
+
+		InsertCase5(node);
 	}
 
 	TEM void Container<T, Alloc>::InsertCase5(Node* node)
 	{
+		Node* gp = GetGrandParent(node);
+
+		if (gp)
+		{
+			if ()
+		}
 	}
 
 	TEM bool Container<T, Alloc>::IsLeaf(Node* node)
@@ -319,7 +341,14 @@ namespace Containers
 
 	TEM Container<T, Alloc>::ControlBlock::ControlBlock(Container<T, Alloc>& cont) noexcept : Cont_{ cont }
 	{
-		Node* node = const_cast<std::decay_t<Cont>&>(cont).CreateControlBlock();
+		ControlBlock_ = const_cast<std::decay_t<Cont>&>(cont).CreateControlBlock();
+		Node* node = cont.FakeRoot_;
+
+		while (node)
+		{
+			ControlBlock_->Stack_.push(node);
+			node = node->Left_;
+		}
 	}
 
 	TEM Container<T, Alloc>::ControlBlock::ControlBlock(Container<T, Alloc>& cont, std::stack<Node*>&& st)
