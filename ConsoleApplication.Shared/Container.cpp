@@ -278,7 +278,12 @@ namespace Containers
 
 		if (gp)
 		{
-			if ()
+			node->Parent_->IsMid_ = true;
+			gp->IsMid_ = false;
+
+			if (gp->Left_ == node->Parent_)
+			{
+			}
 		}
 	}
 
