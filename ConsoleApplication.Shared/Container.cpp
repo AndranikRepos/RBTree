@@ -461,6 +461,8 @@ namespace Containers
 
 	TEM TEM_IS_CONST void Container<T, Alloc>::common_iterator<IsConst>::MoveNext()
 	{
+		Node* node = ControlBlock_->Stack_.top();
+		ControlBlock_->Stack_.pop();
 	}
 
 	TEM TEM_IS_CONST void Container<T, Alloc>::common_iterator<IsConst>::MovePrev()
