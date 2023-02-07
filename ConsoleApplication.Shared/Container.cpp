@@ -319,6 +319,7 @@ namespace Containers
 
 	TEM Container<T, Alloc>::ControlBlock::ControlBlock(Container<T, Alloc>& cont) noexcept : Cont_{ cont }
 	{
+		Node* node = const_cast<std::decay_t<Cont>&>(cont).CreateControlBlock();
 	}
 
 	TEM Container<T, Alloc>::ControlBlock::ControlBlock(Container<T, Alloc>& cont, std::stack<Node*>&& st)
@@ -463,10 +464,26 @@ namespace Containers
 	{
 		Node* node = ControlBlock_->Stack_.top();
 		ControlBlock_->Stack_.pop();
+		node = node->Right_;
+
+		while (node)
+		{
+			ControlBlock_->Stack_.push(node);
+			node = node->Left_;
+		}
 	}
 
 	TEM TEM_IS_CONST void Container<T, Alloc>::common_iterator<IsConst>::MovePrev()
 	{
+		Node* node = ControlBlock_->Stack_.top();
+		ControlBlock_->Stack_.pop();
+		node = node->Left_;
+
+		while (node)
+		{
+			ControlBlock_->Stack_.push(node);
+			node = node->Right_;
+		}
 	}
 
 	TEM TEM_IS_CONST typename Container<T, Alloc>::Node* Container<T, Alloc>::common_iterator<IsConst>::operator&()
