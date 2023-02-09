@@ -444,8 +444,22 @@ namespace Containers
 
 	TEM void Container<T, Alloc>::CompleteReplaceNode(Node* first, Node* second)
 	{
-		if (first->Parent_->Left_ == first)
+		if (second->Parent_->Left_ == second)
+			second->Parent_->Left_ = second->Left_;
+		else
+			second->Parent_->Right_ = second->Left_;
 
+		if (second->Left_) second->Left_->Parent_ = second->Parent_;
+
+		ReplaceNode(first, second);
+
+		second->Left_ = first->Left_;
+		if (second->Left_) second->Left_->Parent_ = second;
+
+		second->Right_ = first->Right_;
+		if (second->Right_) second->Right_->Parent_ = second;
+
+		second->IsMid_ = first->IsMid_;
 	}
 
 	TEM Container<T, Alloc>::Node::Node() : Parent_{}, Value_{}, Left_{}, Right_{}, IsMid_{}
