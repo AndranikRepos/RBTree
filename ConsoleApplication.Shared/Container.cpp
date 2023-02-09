@@ -295,14 +295,43 @@ namespace Containers
 
 	TEM void Container<T, Alloc>::DeleteWithTwoChild(Node* node)
 	{
+		if (!IsLeaf(node->Left_) && !IsLeaf(node->Right_))
+		{
+			CompleteReplaceNode(node, GetLeftBottomNode(node));
+		}
+		else
+		{
+			DeleteWithOneChild(node);
+		}
 	}
 
 	TEM void Container<T, Alloc>::DeleteWithOneChild(Node* node)
 	{
+		if (IsLeaf(node->Left_) ^ IsLeaf(node->Right_))
+		{
+			Node* child = IsLeaf(node->Left_) ? node->Right_ : node->Left_;
+			ReplaceNode(node, child);
+
+			if (node->IsMid_)
+			{
+				if (!child->IsMid_)
+					child->IsMid_ = true;
+				else
+					DeleteCase1(node);
+			}
+		}
+		else
+		{
+			DeleteWithoutChild(node);
+		}
 	}
 
 	TEM void Container<T, Alloc>::DeleteWithoutChild(Node* node)
 	{
+		if (node->Parent_->Left_ == node)
+			node->Parent_->Left_ = nullptr;
+		else
+			node->Parent_->Right_ = nullptr;
 	}
 
 	TEM void Container<T, Alloc>::DeleteCase1(Node* node)
