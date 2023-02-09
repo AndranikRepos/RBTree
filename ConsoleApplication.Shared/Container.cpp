@@ -123,7 +123,7 @@ namespace Containers
 		return const_iterator(*this);
 	}
 
-	TEM typename Container<T, Alloc>::const_iterator Container<T, Alloc>::cbegin()
+	TEM typename Container<T, Alloc>::const_iterator Container<T, Alloc>::cend()
 	{
 		return const_iterator(*this, true);
 	}
@@ -143,7 +143,7 @@ namespace Containers
 		return iterator(*this);
 	}
 
-	TEM typename Container<T, Alloc>::iterator Container<T, Alloc>::begin()
+	TEM typename Container<T, Alloc>::iterator Container<T, Alloc>::end()
 	{
 		return iterator(*this, true);
 	}
@@ -472,7 +472,8 @@ namespace Containers
 	{
 	}
 
-	TEM TEM_U Container<T, Alloc>::Node::Node(U&& value) noexcept : Parent_{}, Value_{ std::forward<U>(value) }, Left_{}, Right_{}, IsMid_{}
+	TEM TEM_U Container<T, Alloc>::Node::Node(U&& value) noexcept(std::is_nothrow_move_constructible_v<value_type>)
+		: Parent_{}, Value_{ std::forward<U>(value) }, Left_{}, Right_{}, IsMid_{}
 	{
 	}
 
