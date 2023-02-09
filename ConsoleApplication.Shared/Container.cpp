@@ -472,7 +472,7 @@ namespace Containers
 	{
 	}
 
-	TEM TEM_U Container<T, Alloc>::Node::Node(U&& value) : Parent_{}, Value_{ std::forward<U>(value) }, Left_{}, Right_{}, IsMid_{}
+	TEM TEM_U Container<T, Alloc>::Node::Node(U&& value) noexcept : Parent_{}, Value_{ std::forward<U>(value) }, Left_{}, Right_{}, IsMid_{}
 	{
 	}
 
@@ -482,7 +482,7 @@ namespace Containers
 
 	TEM Container<T, Alloc>::ControlBlock::ControlBlock(Container<T, Alloc>& cont, std::stack<Node*>&& st)
 		noexcept(std::is_nothrow_move_constructible_v<std::stack<Node*>>)
-		: Cont_{ cont }
+		: Cont_{ cont }, Stack_{ std::move(st) }
 	{
 	}
 

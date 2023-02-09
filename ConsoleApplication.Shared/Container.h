@@ -91,7 +91,7 @@ namespace Containers
 		Alloc<Node> Alloc_;
 		using AllocTr = std::allocator_traits<decltype(Alloc_)>;
 
-		Alloc<ControlBlock> Alloc_;
+		Alloc<ControlBlock> ControlBlockAlloc_;
 		using ControlBlockAllocTr = std::allocator_traits<decltype(ControlBlockAlloc_)>;
 
 		Node* FakeRoot_;
