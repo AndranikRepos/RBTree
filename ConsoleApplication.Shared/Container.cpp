@@ -374,6 +374,9 @@ namespace Containers
 		{
 			DeleteWithOneChild(node);
 		}
+
+		AllocTr::destroy(Alloc_, node);
+		AllocTr::deallocate(Alloc_, node, 1);
 	}
 
 	TEM void Container<T, Alloc>::DeleteWithOneChild(Node* node)
@@ -431,10 +434,18 @@ namespace Containers
 
 	TEM void Container<T, Alloc>::ReplaceNode(Node* first, Node* second)
 	{
+		second->Parent_ = first->Parent_;
+
+		if (first->Parent_->Left_ == first)
+			first->Parent_->Left_ = second;
+		else
+			first->Parent_->Right_ = second;
 	}
 
 	TEM void Container<T, Alloc>::CompleteReplaceNode(Node* first, Node* second)
 	{
+		if (first->Parent_->Left_ == first)
+
 	}
 
 	TEM Container<T, Alloc>::Node::Node() : Parent_{}, Value_{}, Left_{}, Right_{}, IsMid_{}
