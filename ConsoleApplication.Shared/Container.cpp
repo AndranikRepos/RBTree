@@ -18,7 +18,7 @@ namespace Containers
 		AllocTr::deallocate(Alloc_, FakeRoot_, 1);
 
 		ControlBlockAllocTr::destroy(ControlBlockAlloc_, FakeRoot_);
-		ControlBlockAllocTr::deallocate(ControlBlockAlloc_, FakeRoot_, 1);
+		ControlBlockAllocTr::deallocate(ControlBlockAlloc_, EndControlBlock_, 1);
 	}
 
 	TEM TEM_U std::pair<typename Container<T, Alloc>::iterator, bool> Container<T, Alloc>::Insert(U&& value)
