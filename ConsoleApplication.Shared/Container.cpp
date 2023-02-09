@@ -282,8 +282,9 @@ namespace Containers
 			gp->IsMid_ = false;
 
 			if (gp->Left_ == node->Parent_)
-			{
-			}
+				RotateRight(gp);
+			else
+				RotateLeft(gp);
 		}
 	}
 
