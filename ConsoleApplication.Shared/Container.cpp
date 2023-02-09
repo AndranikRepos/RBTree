@@ -543,7 +543,7 @@ namespace Containers
 	TEM TEM_IS_CONST typename Container<T, Alloc>::template common_iterator<IsConst>&
 		Container<T, Alloc>::common_iterator<IsConst>::operator=(const common_iterator<IsConst>& iter)
 	{
-		if (this == &iter || ControlBlock_ == iter.ControlBlock_)
+		if (this == std::addressof(iter) || ControlBlock_ == iter.ControlBlock_)
 			return *this;
 
 		if (iter.ControlBlock_ == iter.ControlBlock_->Cont_.EndControlBlock_)
@@ -562,7 +562,7 @@ namespace Containers
 	TEM TEM_IS_CONST typename Container<T, Alloc>::template common_iterator<IsConst>&
 		Container<T, Alloc>::common_iterator<IsConst>::operator=(common_iterator<IsConst>&& iter) noexcept
 	{
-		if (this == &iter)
+		if (this == std::addressof(iter))
 			return *this;
 
 		ControlBlock_ = iter.ControlBlock_;
