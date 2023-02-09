@@ -13,6 +13,12 @@ namespace Containers
 	TEM Container<T, Alloc>::~Container()
 	{
 		Clear();
+
+		AllocTr::destroy(Alloc_, FakeRoot_);
+		AllocTr::deallocate(Alloc_, FakeRoot_, 1);
+
+		ControlBlockAllocTr::destroy(ControlBlockAlloc_, FakeRoot_);
+		ControlBlockAllocTr::deallocate(ControlBlockAlloc_, FakeRoot_, 1);
 	}
 
 	TEM TEM_U std::pair<typename Container<T, Alloc>::iterator, bool> Container<T, Alloc>::Insert(U&& value)
@@ -79,7 +85,7 @@ namespace Containers
 		{
 			if (current->Value_ == value)
 			{
-				DeleteWithTwoChild(node);
+				DeleteWithTwoChild(current);
 				return std::make_pair(iterator(*this, std::move(st)), true);
 			}
 
@@ -472,23 +478,16 @@ namespace Containers
 
 	TEM Container<T, Alloc>::ControlBlock::ControlBlock(Container<T, Alloc>& cont) noexcept : Cont_{ cont }
 	{
-		ControlBlock_ = const_cast<std::decay_t<Cont>&>(cont).CreateControlBlock();
-		Node* node = cont.FakeRoot_;
-
-		while (node)
-		{
-			ControlBlock_->Stack_.push(node);
-			node = node->Left_;
-		}
 	}
 
 	TEM Container<T, Alloc>::ControlBlock::ControlBlock(Container<T, Alloc>& cont, std::stack<Node*>&& st)
 		noexcept(std::is_nothrow_move_constructible_v<std::stack<Node*>>)
+		: Cont_{ cont }
 	{
 	}
 
 	TEM TEM_IS_CONST Container<T, Alloc>::common_iterator<IsConst>::common_iterator(Container<T, Alloc>& cont, std::stack<Node*>&& st)
-		noexcept(std::is_nothrow_move_constructible_v<std::stack<Node*>>) : Cont_{ cont }
+		noexcept(std::is_nothrow_move_constructible_v<std::stack<Node*>>)
 	{
 		ControlBlock_ = cont.CreateControlBlock();
 		ControlBlock_->Stack_ = std::move(st);
@@ -530,7 +529,7 @@ namespace Containers
 		else
 		{
 			ControlBlock_ = iter.ControlBlock_->Cont_.CreateControlBlock();
-			ControlBlock_->Stack_{ iter.ControlBlock_->Stack_ };
+			ControlBlock_->Stack_ = iter.ControlBlock_->Stack_;
 		}
 	}
 
@@ -553,7 +552,7 @@ namespace Containers
 		else
 		{
 			ControlBlock_ = iter.ControlBlock_->Cont_.CreateControlBlock();
-			ControlBlock_->Stack_{ iter.ControlBlock_->Stack_ };
+			ControlBlock_->Stack_ = iter.ControlBlock_->Stack_;
 		}
 
 		return *this;
