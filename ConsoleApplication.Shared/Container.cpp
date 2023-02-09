@@ -19,6 +19,52 @@ namespace Containers
 	{
 		std::stack<Node*> st;
 		st.push(FakeRoot_);
+		Node* node = CreateNode(std::forward<U>(value));
+
+		if (!FakeRoot_->Left_)
+		{
+			FakeRoot_->Left_ = node;
+			node->Parent_ = FakeRoot_;
+		}
+		else
+		{
+			Node* current = FakeRoot_->Left_;
+
+			while (true)
+			{
+				if (current->Value_ > node->Value_)
+				{
+					if (current->Left_)
+					{
+						current = current->Left_;
+						st.push(current);
+					}
+					else
+					{
+						current->Left_ = node;
+						node->Parent_ = current;
+						break;
+					}
+				}
+				else
+				{
+					if (current->Right_)
+					{
+						current = current->Right_;
+						st.push(current);
+					}
+					else
+					{
+						current->Right_ = node;
+						node->Parent_ = current;
+						break;
+					}
+				}
+			}
+		}
+
+		InsertCase1(node);
+		++Count_;
 
 		return std::make_pair(iterator(*this, std::move(st)), true);
 	}
@@ -27,8 +73,33 @@ namespace Containers
 	{
 		std::stack<Node*> st;
 		st.push(FakeRoot_);
+		Node* current = FakeRoot_->Left_;
 
-		return std::make_pair(iterator(*this, std::move(st)), true);
+		while (true)
+		{
+			if (current->Value_ == value)
+			{
+				DeleteWithTwoChild(node);
+				return std::make_pair(iterator(*this, std::move(st)), true);
+			}
+
+			if (current->Value_ > value && current->Left_)
+			{
+				current = current->Left_;
+				st.push(current);
+			}
+			else if (current->Value_ > value && current->Right_)
+			{
+				current = current->Right_;
+				st.push(current);
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		return std::make_pair(iterator(*this, true), false);
 	}
 
 	TEM typename Container<T, Alloc>::const_iterator Container<T, Alloc>::cbegin() const
