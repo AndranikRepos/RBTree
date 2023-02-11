@@ -17,7 +17,7 @@ namespace Containers
 		AllocTr::destroy(Alloc_, FakeRoot_);
 		AllocTr::deallocate(Alloc_, FakeRoot_, 1);
 
-		ControlBlockAllocTr::destroy(ControlBlockAlloc_, FakeRoot_);
+		ControlBlockAllocTr::destroy(ControlBlockAlloc_, EndControlBlock_);
 		ControlBlockAllocTr::deallocate(ControlBlockAlloc_, EndControlBlock_, 1);
 	}
 
@@ -150,6 +150,19 @@ namespace Containers
 
 	TEM void RBTree<T, Alloc>::Clear()
 	{
+		auto b = begin();
+		auto e = end();
+
+		while (b != e)
+		{
+			Node* node = &b;
+			++b;
+
+			AllocTr::destroy(Alloc_, node);
+			AllocTr::deallocate(Alloc_, node, 1);
+		}
+
+		FakeRoot_->Left_ = nullptr;
 	}
 
 	TEM typename RBTree<T, Alloc>::Node* RBTree<T, Alloc>::CreateNode()
