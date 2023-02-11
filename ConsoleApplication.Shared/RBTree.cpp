@@ -440,18 +440,87 @@ namespace Containers
 
 	TEM void RBTree<T, Alloc>::DeleteCase3(Node* node)
 	{
+		Node* brother = GetBrother(node);
+
+		if (node->Parent_->IsMid_
+			&& brother && brother->IsMid_
+			&& (!brother->Left_ || brother->Left_->IsMid_)
+			&& (!brother->Right_ || brother->Right_->IsMid_)
+			)
+		{
+			brother->IsMid_ = false;
+			DeleteCase1(node);
+		}
+		else
+		{
+			DeleteCase4(node);
+		}
 	}
 
 	TEM void RBTree<T, Alloc>::DeleteCase4(Node* node)
 	{
+		Node* brother = GetBrother(node);
+
+		if (!node->Parent_->IsMid_
+			&& brother && brother->IsMid_
+			&& (!brother->Left_ || brother->Left_->IsMid_)
+			&& (!brother->Right_ || brother->Right_->IsMid_)
+			)
+		{
+			node->Parent_->IsMid_ = true;
+			brother->IsMid_ = false;
+		}
+		else
+		{
+			DeleteCase5(node);
+		}
 	}
 
 	TEM void RBTree<T, Alloc>::DeleteCase5(Node* node)
 	{
+		Node* brother = GetBrother(node);
+
+		if (brother && brother->IsMid_)
+		{
+			if (node->Parent_->Left_ == node
+				&& brother->Left_ && !brother->Left_->IsMid_)
+			{
+				brother->IsMid_ = false;
+				brother->Left_->IsMid_ = true;
+				RotateRight(brother);
+			}
+			else if (node->Parent_->Right_ == node
+				&& brother->Right_ && !brother->Right_->IsMid_)
+			{
+				brother->IsMid_ = false;
+				brother->Right_->IsMid_ = true;
+				RotateLeft(brother);
+			}
+		}
 	}
 
 	TEM void RBTree<T, Alloc>::DeleteCase6(Node* node)
 	{
+		Node* brother = GetBrother(node);
+
+		if (brother && brother->IsMid_)
+		{
+			brother->IsMid_ = node->Parent_->IsMid_;
+			node->Parent_->IsMid_ = true;
+
+			if (node->Parent_->Left_ == node
+				&& brother->Right_ && !brother->Right_->IsMid_)
+			{
+				brother->Right_->IsMid_ = true;
+				RotateLeft(node->Parent_);
+			}
+			else if (node->Parent_->Right_ == node
+				&& brother->Left_ && !brother->Left_->IsMid_)
+			{
+				brother->Left_->IsMid_ = true;
+				RotateLeft(node->Parent_);
+			}
+		}
 	}
 
 	TEM void RBTree<T, Alloc>::ReplaceNode(Node* first, Node* second)
