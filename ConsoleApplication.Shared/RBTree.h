@@ -28,7 +28,7 @@
 #define TEM_U template < typename U >
 #define TEM_IS_CONST template < bool IsConst >
 
-namespace RBTrees
+namespace Containers
 {
 	TEM_DEF class DLLEXPORT RBTree
 	{

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "RBTree.h"
 
-namespace RBTrees
+namespace Containers
 {
 	TEM RBTree<T, Alloc>::RBTree() : Alloc_{}, ControlBlockAlloc_{}, Count_{}
 	{
