@@ -70,6 +70,7 @@ namespace Containers
 		}
 
 		InsertCase1(node);
+		st.push(node);
 		++Count_;
 
 		return std::make_pair(iterator(*this, std::move(st)), true);

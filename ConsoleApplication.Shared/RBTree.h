@@ -4,6 +4,7 @@
 #include <cstring>
 #include <utility>
 #include <type_traits>
+#include <stack>
 
 #ifdef SHARED_LIB
 #define DLLEXPORT __declspec(dllexport)
