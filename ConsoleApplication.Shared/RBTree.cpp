@@ -613,7 +613,7 @@ namespace Containers
 
 	TEM TEM_IS_CONST RBTree<T, Alloc>::common_iterator<IsConst>::~common_iterator()
 	{
-		if (ControlBlock_ != ControlBlock_->Cont_.EndControlBlock_)
+		if (ControlBlock_ && ControlBlock_ != ControlBlock_->Cont_.EndControlBlock_)
 		{
 			ControlBlockAllocTr::destroy(ControlBlock_->Cont_.ControlBlockAlloc_, ControlBlock_);
 			ControlBlockAllocTr::deallocate(ControlBlock_->Cont_.ControlBlockAlloc_, ControlBlock_, 1);
