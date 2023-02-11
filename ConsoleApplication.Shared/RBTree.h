@@ -28,9 +28,9 @@
 #define TEM_U template < typename U >
 #define TEM_IS_CONST template < bool IsConst >
 
-namespace Containers
+namespace RBTrees
 {
-	TEM_DEF class DLLEXPORT Container
+	TEM_DEF class DLLEXPORT RBTree
 	{
 	public:
 		using size_type = SIZE_TYPE;
@@ -55,17 +55,17 @@ namespace Containers
 
 		struct ControlBlock
 		{
-			Container<T, Alloc>& Cont_;
+			RBTree<T, Alloc>& Cont_;
 			std::stack<Node*> Stack_;
-			ControlBlock(Container<T, Alloc>& cont) noexcept;
-			ControlBlock(Container<T, Alloc>& cont, std::stack<Node*>&& st) noexcept(std::is_nothrow_move_constructible_v<std::stack<Node*>>);
+			ControlBlock(RBTree<T, Alloc>& cont) noexcept;
+			ControlBlock(RBTree<T, Alloc>& cont, std::stack<Node*>&& st) noexcept(std::is_nothrow_move_constructible_v<std::stack<Node*>>);
 		};
 
 		TEM_IS_CONST class DLLEXPORT common_iterator final
 		{
-			friend class Container<T, Alloc>;
+			friend class RBTree<T, Alloc>;
 			ControlBlock* ControlBlock_;
-			common_iterator(Container<T, Alloc>& cont, std::stack<Node*>&& st)
+			common_iterator(RBTree<T, Alloc>& cont, std::stack<Node*>&& st)
 				noexcept(std::is_nothrow_move_constructible_v<std::stack<Node*>>);
 			void MoveNext();
 			void MovePrev();
@@ -130,8 +130,8 @@ namespace Containers
 		using const_iterator = common_iterator<true>;
 		using iterator = common_iterator<false>;
 
-		Container();
-		virtual ~Container();
+		RBTree();
+		virtual ~RBTree();
 		TEM_U std::pair<iterator, bool> Insert(U&& value);
 		TEM_U std::pair<iterator, bool> Erase(U&& value);
 		const_iterator cbegin() const;

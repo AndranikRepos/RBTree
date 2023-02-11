@@ -1,16 +1,16 @@
 #include "pch.h"
-#include "Container.h"
+#include "RBTree.h"
 
-namespace Containers
+namespace RBTrees
 {
-	TEM Container<T, Alloc>::Container() : Alloc_{}, ControlBlockAlloc_{}, Count_{}
+	TEM RBTree<T, Alloc>::RBTree() : Alloc_{}, ControlBlockAlloc_{}, Count_{}
 	{
 		FakeRoot_ = CreateNode();
 		EndControlBlock_ = CreateControlBlock();
 		EndControlBlock_->Stack_.push(FakeRoot_);
 	}
 
-	TEM Container<T, Alloc>::~Container()
+	TEM RBTree<T, Alloc>::~RBTree()
 	{
 		Clear();
 
@@ -21,7 +21,7 @@ namespace Containers
 		ControlBlockAllocTr::deallocate(ControlBlockAlloc_, EndControlBlock_, 1);
 	}
 
-	TEM TEM_U std::pair<typename Container<T, Alloc>::iterator, bool> Container<T, Alloc>::Insert(U&& value)
+	TEM TEM_U std::pair<typename RBTree<T, Alloc>::iterator, bool> RBTree<T, Alloc>::Insert(U&& value)
 	{
 		std::stack<Node*> st;
 		st.push(FakeRoot_);
@@ -75,7 +75,7 @@ namespace Containers
 		return std::make_pair(iterator(*this, std::move(st)), true);
 	}
 
-	TEM TEM_U std::pair<typename Container<T, Alloc>::iterator, bool> Container<T, Alloc>::Erase(U&& value)
+	TEM TEM_U std::pair<typename RBTree<T, Alloc>::iterator, bool> RBTree<T, Alloc>::Erase(U&& value)
 	{
 		std::stack<Node*> st;
 		st.push(FakeRoot_);
@@ -108,51 +108,51 @@ namespace Containers
 		return std::make_pair(iterator(*this, true), false);
 	}
 
-	TEM typename Container<T, Alloc>::const_iterator Container<T, Alloc>::cbegin() const
+	TEM typename RBTree<T, Alloc>::const_iterator RBTree<T, Alloc>::cbegin() const
 	{
 		return const_iterator(*this);
 	}
 
-	TEM typename Container<T, Alloc>::const_iterator Container<T, Alloc>::cend() const
+	TEM typename RBTree<T, Alloc>::const_iterator RBTree<T, Alloc>::cend() const
 	{
 		return const_iterator(*this, true);
 	}
 
-	TEM typename Container<T, Alloc>::const_iterator Container<T, Alloc>::cbegin()
+	TEM typename RBTree<T, Alloc>::const_iterator RBTree<T, Alloc>::cbegin()
 	{
 		return const_iterator(*this);
 	}
 
-	TEM typename Container<T, Alloc>::const_iterator Container<T, Alloc>::cend()
+	TEM typename RBTree<T, Alloc>::const_iterator RBTree<T, Alloc>::cend()
 	{
 		return const_iterator(*this, true);
 	}
 
-	TEM typename Container<T, Alloc>::iterator Container<T, Alloc>::begin() const
+	TEM typename RBTree<T, Alloc>::iterator RBTree<T, Alloc>::begin() const
 	{
 		return iterator(*this);
 	}
 
-	TEM typename Container<T, Alloc>::iterator Container<T, Alloc>::end() const
+	TEM typename RBTree<T, Alloc>::iterator RBTree<T, Alloc>::end() const
 	{
 		return iterator(*this, true);
 	}
 
-	TEM typename Container<T, Alloc>::iterator Container<T, Alloc>::begin()
+	TEM typename RBTree<T, Alloc>::iterator RBTree<T, Alloc>::begin()
 	{
 		return iterator(*this);
 	}
 
-	TEM typename Container<T, Alloc>::iterator Container<T, Alloc>::end()
+	TEM typename RBTree<T, Alloc>::iterator RBTree<T, Alloc>::end()
 	{
 		return iterator(*this, true);
 	}
 
-	TEM void Container<T, Alloc>::Clear()
+	TEM void RBTree<T, Alloc>::Clear()
 	{
 	}
 
-	TEM typename Container<T, Alloc>::Node* Container<T, Alloc>::CreateNode()
+	TEM typename RBTree<T, Alloc>::Node* RBTree<T, Alloc>::CreateNode()
 	{
 		Node* node = AllocTr::allocate(Alloc_, 1);
 
@@ -169,7 +169,7 @@ namespace Containers
 		return node;
 	}
 
-	TEM TEM_U typename Container<T, Alloc>::Node* Container<T, Alloc>::CreateNode(U&& value)
+	TEM TEM_U typename RBTree<T, Alloc>::Node* RBTree<T, Alloc>::CreateNode(U&& value)
 	{
 		Node* node = AllocTr::allocate(Alloc_, 1);
 
@@ -186,7 +186,7 @@ namespace Containers
 		return node;
 	}
 
-	TEM typename Container<T, Alloc>::ControlBlock* Container<T, Alloc>::CreateControlBlock()
+	TEM typename RBTree<T, Alloc>::ControlBlock* RBTree<T, Alloc>::CreateControlBlock()
 	{
 		ControlBlock* controlBlock = ControlBlockAllocTr::allocate(ControlBlockAlloc_, 1);
 
@@ -203,7 +203,7 @@ namespace Containers
 		return controlBlock;
 	}
 
-	TEM typename Container<T, Alloc>::Node* Container<T, Alloc>::GetGrandParent(Node* node)
+	TEM typename RBTree<T, Alloc>::Node* RBTree<T, Alloc>::GetGrandParent(Node* node)
 	{
 		return node->Parent_ != FakeRoot_
 			? node->Parent_->Parent_ != FakeRoot_
@@ -212,7 +212,7 @@ namespace Containers
 			: nullptr;
 	}
 
-	TEM typename Container<T, Alloc>::Node* Container<T, Alloc>::GetUncle(Node* node)
+	TEM typename RBTree<T, Alloc>::Node* RBTree<T, Alloc>::GetUncle(Node* node)
 	{
 		Node* gp = GetGrandParent(node);
 
@@ -223,7 +223,7 @@ namespace Containers
 			: nullptr;
 	}
 
-	TEM typename Container<T, Alloc>::Node* Container<T, Alloc>::GetBrother(Node* node)
+	TEM typename RBTree<T, Alloc>::Node* RBTree<T, Alloc>::GetBrother(Node* node)
 	{
 		return node->Parent_ != FakeRoot_
 			? node->Parent_->Left_ == node
@@ -232,7 +232,7 @@ namespace Containers
 			: nullptr;
 	}
 
-	TEM typename Container<T, Alloc>::Node* Container<T, Alloc>::GetLeftBottomNode(Node* node)
+	TEM typename RBTree<T, Alloc>::Node* RBTree<T, Alloc>::GetLeftBottomNode(Node* node)
 	{
 		if (!node->Left_) return nullptr;
 
@@ -244,7 +244,7 @@ namespace Containers
 		return node;
 	}
 
-	TEM typename Container<T, Alloc>::Node* Container<T, Alloc>::GetRightBottomNode(Node* node)
+	TEM typename RBTree<T, Alloc>::Node* RBTree<T, Alloc>::GetRightBottomNode(Node* node)
 	{
 		if (!node->Right_) return nullptr;
 
@@ -256,7 +256,7 @@ namespace Containers
 		return node;
 	}
 
-	TEM void Container<T, Alloc>::RotateLeft(Node* node)
+	TEM void RBTree<T, Alloc>::RotateLeft(Node* node)
 	{
 		Node* pivot = node->Right_;
 		pivot->Parent_ = node->Parent_;
@@ -272,7 +272,7 @@ namespace Containers
 		node->Parent_ = pivot;
 	}
 
-	TEM void Container<T, Alloc>::RotateRight(Node* node)
+	TEM void RBTree<T, Alloc>::RotateRight(Node* node)
 	{
 		Node* pivot = node->Left_;
 		pivot->Parent_ = node->Parent_;
@@ -288,7 +288,7 @@ namespace Containers
 		node->Parent_ = pivot;
 	}
 
-	TEM void Container<T, Alloc>::InsertCase1(Node* node)
+	TEM void RBTree<T, Alloc>::InsertCase1(Node* node)
 	{
 		if (node->Parent_ == FakeRoot_)
 			node->IsMid_ = true;
@@ -296,7 +296,7 @@ namespace Containers
 			InsertCase2(node);
 	}
 
-	TEM void Container<T, Alloc>::InsertCase2(Node* node)
+	TEM void RBTree<T, Alloc>::InsertCase2(Node* node)
 	{
 		if (node->Parent_->IsMid_)
 			return;
@@ -304,7 +304,7 @@ namespace Containers
 			InsertCase3(node);
 	}
 
-	TEM void Container<T, Alloc>::InsertCase3(Node* node)
+	TEM void RBTree<T, Alloc>::InsertCase3(Node* node)
 	{
 		Node* uncle;
 
@@ -328,7 +328,7 @@ namespace Containers
 		InsertCase4(node);
 	}
 
-	TEM void Container<T, Alloc>::InsertCase4(Node* node)
+	TEM void RBTree<T, Alloc>::InsertCase4(Node* node)
 	{
 		Node* gp = GetGrandParent(node);
 
@@ -349,7 +349,7 @@ namespace Containers
 		InsertCase5(node);
 	}
 
-	TEM void Container<T, Alloc>::InsertCase5(Node* node)
+	TEM void RBTree<T, Alloc>::InsertCase5(Node* node)
 	{
 		Node* gp = GetGrandParent(node);
 
@@ -365,12 +365,12 @@ namespace Containers
 		}
 	}
 
-	TEM bool Container<T, Alloc>::IsLeaf(Node* node)
+	TEM bool RBTree<T, Alloc>::IsLeaf(Node* node)
 	{
 		return !node;
 	}
 
-	TEM void Container<T, Alloc>::DeleteWithTwoChild(Node* node)
+	TEM void RBTree<T, Alloc>::DeleteWithTwoChild(Node* node)
 	{
 		if (!IsLeaf(node->Left_) && !IsLeaf(node->Right_))
 		{
@@ -385,7 +385,7 @@ namespace Containers
 		AllocTr::deallocate(Alloc_, node, 1);
 	}
 
-	TEM void Container<T, Alloc>::DeleteWithOneChild(Node* node)
+	TEM void RBTree<T, Alloc>::DeleteWithOneChild(Node* node)
 	{
 		if (IsLeaf(node->Left_) ^ IsLeaf(node->Right_))
 		{
@@ -406,7 +406,7 @@ namespace Containers
 		}
 	}
 
-	TEM void Container<T, Alloc>::DeleteWithoutChild(Node* node)
+	TEM void RBTree<T, Alloc>::DeleteWithoutChild(Node* node)
 	{
 		if (node->Parent_->Left_ == node)
 			node->Parent_->Left_ = nullptr;
@@ -414,31 +414,31 @@ namespace Containers
 			node->Parent_->Right_ = nullptr;
 	}
 
-	TEM void Container<T, Alloc>::DeleteCase1(Node* node)
+	TEM void RBTree<T, Alloc>::DeleteCase1(Node* node)
 	{
 	}
 
-	TEM void Container<T, Alloc>::DeleteCase2(Node* node)
+	TEM void RBTree<T, Alloc>::DeleteCase2(Node* node)
 	{
 	}
 
-	TEM void Container<T, Alloc>::DeleteCase3(Node* node)
+	TEM void RBTree<T, Alloc>::DeleteCase3(Node* node)
 	{
 	}
 
-	TEM void Container<T, Alloc>::DeleteCase4(Node* node)
+	TEM void RBTree<T, Alloc>::DeleteCase4(Node* node)
 	{
 	}
 
-	TEM void Container<T, Alloc>::DeleteCase5(Node* node)
+	TEM void RBTree<T, Alloc>::DeleteCase5(Node* node)
 	{
 	}
 
-	TEM void Container<T, Alloc>::DeleteCase6(Node* node)
+	TEM void RBTree<T, Alloc>::DeleteCase6(Node* node)
 	{
 	}
 
-	TEM void Container<T, Alloc>::ReplaceNode(Node* first, Node* second)
+	TEM void RBTree<T, Alloc>::ReplaceNode(Node* first, Node* second)
 	{
 		second->Parent_ = first->Parent_;
 
@@ -448,7 +448,7 @@ namespace Containers
 			first->Parent_->Right_ = second;
 	}
 
-	TEM void Container<T, Alloc>::CompleteReplaceNode(Node* first, Node* second)
+	TEM void RBTree<T, Alloc>::CompleteReplaceNode(Node* first, Node* second)
 	{
 		if (second->Parent_->Left_ == second)
 			second->Parent_->Left_ = second->Left_;
@@ -468,36 +468,36 @@ namespace Containers
 		second->IsMid_ = first->IsMid_;
 	}
 
-	TEM Container<T, Alloc>::Node::Node() : Parent_{}, Value_{}, Left_{}, Right_{}, IsMid_{}
+	TEM RBTree<T, Alloc>::Node::Node() : Parent_{}, Value_{}, Left_{}, Right_{}, IsMid_{}
 	{
 	}
 
-	TEM TEM_U Container<T, Alloc>::Node::Node(U&& value) noexcept(std::is_nothrow_move_constructible_v<value_type>)
+	TEM TEM_U RBTree<T, Alloc>::Node::Node(U&& value) noexcept(std::is_nothrow_move_constructible_v<value_type>)
 		: Parent_{}, Value_{ std::forward<U>(value) }, Left_{}, Right_{}, IsMid_{}
 	{
 	}
 
-	TEM Container<T, Alloc>::ControlBlock::ControlBlock(Container<T, Alloc>& cont) noexcept : Cont_{ cont }
+	TEM RBTree<T, Alloc>::ControlBlock::ControlBlock(RBTree<T, Alloc>& cont) noexcept : Cont_{ cont }
 	{
 	}
 
-	TEM Container<T, Alloc>::ControlBlock::ControlBlock(Container<T, Alloc>& cont, std::stack<Node*>&& st)
+	TEM RBTree<T, Alloc>::ControlBlock::ControlBlock(RBTree<T, Alloc>& cont, std::stack<Node*>&& st)
 		noexcept(std::is_nothrow_move_constructible_v<std::stack<Node*>>)
 		: Cont_{ cont }, Stack_{ std::move(st) }
 	{
 	}
 
-	TEM TEM_IS_CONST Container<T, Alloc>::common_iterator<IsConst>::common_iterator(Container<T, Alloc>& cont, std::stack<Node*>&& st)
+	TEM TEM_IS_CONST RBTree<T, Alloc>::common_iterator<IsConst>::common_iterator(RBTree<T, Alloc>& cont, std::stack<Node*>&& st)
 		noexcept(std::is_nothrow_move_constructible_v<std::stack<Node*>>)
 	{
 		ControlBlock_ = cont.CreateControlBlock();
 		ControlBlock_->Stack_ = std::move(st);
 	}
 
-	TEM TEM_IS_CONST TEM_CONT Container<T, Alloc>::common_iterator<IsConst>::common_iterator(Cont& cont)
+	TEM TEM_IS_CONST TEM_CONT RBTree<T, Alloc>::common_iterator<IsConst>::common_iterator(Cont& cont)
 	{
 		ControlBlock_ = const_cast<std::decay_t<Cont>&>(cont).CreateControlBlock();
-		ControlBlock_->Stack_.push(FakeRoot_);
+		ControlBlock_->Stack_.push(cont.FakeRoot_);
 		Node* node = cont.FakeRoot_;
 
 		while (node)
@@ -507,12 +507,12 @@ namespace Containers
 		}
 	}
 
-	TEM TEM_IS_CONST TEM_CONT Container<T, Alloc>::common_iterator<IsConst>::common_iterator(Cont& cont, bool)
+	TEM TEM_IS_CONST TEM_CONT RBTree<T, Alloc>::common_iterator<IsConst>::common_iterator(Cont& cont, bool)
 	{
 		ControlBlock_ = cont.EndControlBlock_;
 	}
 
-	TEM TEM_IS_CONST Container<T, Alloc>::common_iterator<IsConst>::~common_iterator()
+	TEM TEM_IS_CONST RBTree<T, Alloc>::common_iterator<IsConst>::~common_iterator()
 	{
 		if (ControlBlock_ != ControlBlock_->Cont_.EndControlBlock_)
 		{
@@ -521,7 +521,7 @@ namespace Containers
 		}
 	}
 
-	TEM TEM_IS_CONST Container<T, Alloc>::common_iterator<IsConst>::common_iterator(const common_iterator<IsConst>& iter)
+	TEM TEM_IS_CONST RBTree<T, Alloc>::common_iterator<IsConst>::common_iterator(const common_iterator<IsConst>& iter)
 	{
 		if (iter.ControlBlock_ == iter.ControlBlock_->Cont_.EndControlBlock_)
 		{
@@ -534,14 +534,14 @@ namespace Containers
 		}
 	}
 
-	TEM TEM_IS_CONST Container<T, Alloc>::common_iterator<IsConst>::common_iterator(common_iterator<IsConst>&& iter) noexcept
+	TEM TEM_IS_CONST RBTree<T, Alloc>::common_iterator<IsConst>::common_iterator(common_iterator<IsConst>&& iter) noexcept
 		: ControlBlock_{ iter.ControlBlock_ }
 	{
 		iter.ControlBlock_ = nullptr;
 	}
 
-	TEM TEM_IS_CONST typename Container<T, Alloc>::template common_iterator<IsConst>&
-		Container<T, Alloc>::common_iterator<IsConst>::operator=(const common_iterator<IsConst>& iter)
+	TEM TEM_IS_CONST typename RBTree<T, Alloc>::template common_iterator<IsConst>&
+		RBTree<T, Alloc>::common_iterator<IsConst>::operator=(const common_iterator<IsConst>& iter)
 	{
 		if (this == std::addressof(iter) || ControlBlock_ == iter.ControlBlock_)
 			return *this;
@@ -559,8 +559,8 @@ namespace Containers
 		return *this;
 	}
 
-	TEM TEM_IS_CONST typename Container<T, Alloc>::template common_iterator<IsConst>&
-		Container<T, Alloc>::common_iterator<IsConst>::operator=(common_iterator<IsConst>&& iter) noexcept
+	TEM TEM_IS_CONST typename RBTree<T, Alloc>::template common_iterator<IsConst>&
+		RBTree<T, Alloc>::common_iterator<IsConst>::operator=(common_iterator<IsConst>&& iter) noexcept
 	{
 		if (this == std::addressof(iter))
 			return *this;
@@ -571,56 +571,56 @@ namespace Containers
 		return *this;
 	}
 
-	TEM TEM_IS_CONST std::conditional_t<IsConst, typename Container<T, Alloc>::const_reference,
-		typename Container<T, Alloc>::reference>
-		Container<T, Alloc>::common_iterator<IsConst>::operator*()
+	TEM TEM_IS_CONST std::conditional_t<IsConst, typename RBTree<T, Alloc>::const_reference,
+		typename RBTree<T, Alloc>::reference>
+		RBTree<T, Alloc>::common_iterator<IsConst>::operator*()
 	{
-		return ControlBlock_->Stack_.top().Value_;
+		return ControlBlock_->Stack_.top()->Value_;
 	}
 
-	TEM TEM_IS_CONST std::conditional_t<IsConst, const typename Container<T, Alloc>::template common_iterator<IsConst>&,
-		typename Container<T, Alloc>::template common_iterator<IsConst>&>
-		Container<T, Alloc>::common_iterator<IsConst>::operator++()
+	TEM TEM_IS_CONST std::conditional_t<IsConst, const typename RBTree<T, Alloc>::template common_iterator<IsConst>&,
+		typename RBTree<T, Alloc>::template common_iterator<IsConst>&>
+		RBTree<T, Alloc>::common_iterator<IsConst>::operator++()
 	{
 		MoveNext();
 		return *this;
 	}
 
-	TEM TEM_IS_CONST typename Container<T, Alloc>::template common_iterator<IsConst>
-		Container<T, Alloc>::common_iterator<IsConst>::operator++(int)
+	TEM TEM_IS_CONST typename RBTree<T, Alloc>::template common_iterator<IsConst>
+		RBTree<T, Alloc>::common_iterator<IsConst>::operator++(int)
 	{
 		auto iter = *this;
 		operator++();
 		return iter;
 	}
 
-	TEM TEM_IS_CONST std::conditional_t<IsConst, const typename Container<T, Alloc>::template common_iterator<IsConst>&,
-		typename Container<T, Alloc>::template common_iterator<IsConst>&>
-		Container<T, Alloc>::common_iterator<IsConst>::operator--()
+	TEM TEM_IS_CONST std::conditional_t<IsConst, const typename RBTree<T, Alloc>::template common_iterator<IsConst>&,
+		typename RBTree<T, Alloc>::template common_iterator<IsConst>&>
+		RBTree<T, Alloc>::common_iterator<IsConst>::operator--()
 	{
 		MovePrev();
 		return *this;
 	}
 
-	TEM TEM_IS_CONST typename Container<T, Alloc>::template common_iterator<IsConst>
-		Container<T, Alloc>::common_iterator<IsConst>::operator--(int)
+	TEM TEM_IS_CONST typename RBTree<T, Alloc>::template common_iterator<IsConst>
+		RBTree<T, Alloc>::common_iterator<IsConst>::operator--(int)
 	{
 		auto iter = *this;
 		operator++();
 		return iter;
 	}
 
-	TEM TEM_IS_CONST bool Container<T, Alloc>::common_iterator<IsConst>::operator!=(const common_iterator<IsConst>& iter)
+	TEM TEM_IS_CONST bool RBTree<T, Alloc>::common_iterator<IsConst>::operator!=(const common_iterator<IsConst>& iter)
 	{
 		return ControlBlock_->Stack_.top() != iter.ControlBlock_->Stack_.top();
 	}
 
-	TEM TEM_IS_CONST bool Container<T, Alloc>::common_iterator<IsConst>::operator==(const common_iterator<IsConst>& iter)
+	TEM TEM_IS_CONST bool RBTree<T, Alloc>::common_iterator<IsConst>::operator==(const common_iterator<IsConst>& iter)
 	{
 		return !operator!=(iter);
 	}
 
-	TEM TEM_IS_CONST void Container<T, Alloc>::common_iterator<IsConst>::MoveNext()
+	TEM TEM_IS_CONST void RBTree<T, Alloc>::common_iterator<IsConst>::MoveNext()
 	{
 		Node* node = ControlBlock_->Stack_.top();
 		ControlBlock_->Stack_.pop();
@@ -633,7 +633,7 @@ namespace Containers
 		}
 	}
 
-	TEM TEM_IS_CONST void Container<T, Alloc>::common_iterator<IsConst>::MovePrev()
+	TEM TEM_IS_CONST void RBTree<T, Alloc>::common_iterator<IsConst>::MovePrev()
 	{
 		Node* node = ControlBlock_->Stack_.top();
 		ControlBlock_->Stack_.pop();
@@ -646,7 +646,7 @@ namespace Containers
 		}
 	}
 
-	TEM TEM_IS_CONST typename Container<T, Alloc>::Node* Container<T, Alloc>::common_iterator<IsConst>::operator&()
+	TEM TEM_IS_CONST typename RBTree<T, Alloc>::Node* RBTree<T, Alloc>::common_iterator<IsConst>::operator&()
 	{
 		return ControlBlock_->Stack_.top();
 	}
