@@ -416,10 +416,26 @@ namespace Containers
 
 	TEM void RBTree<T, Alloc>::DeleteCase1(Node* node)
 	{
+		if (node->Parent_ != FakeRoot_)
+			DeleteCase2(node);
 	}
 
 	TEM void RBTree<T, Alloc>::DeleteCase2(Node* node)
 	{
+		Node* brother = GetBrother(node);
+
+		if (brother && !brother->IsMid_)
+		{
+			node->Parent_->IsMid_ = false;
+			brother->IsMid_ = true;
+
+			if (node->Parent_->Left_ == node)
+				RotateLeft(node->Parent_);
+			else
+				RotateRight(node->Parent_);
+		}
+
+		DeleteCase3(node);
 	}
 
 	TEM void RBTree<T, Alloc>::DeleteCase3(Node* node)
