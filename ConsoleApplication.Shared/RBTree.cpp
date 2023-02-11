@@ -570,7 +570,7 @@ namespace Containers
 	{
 	}
 
-	TEM TEM_U RBTree<T, Alloc>::Node::Node(U&& value) noexcept(std::is_nothrow_move_constructible_v<value_type>)
+	TEM TEM_U RBTree<T, Alloc>::Node::Node(U&& value) noexcept(!std::is_lvalue_reference_v<U> && std::is_nothrow_move_constructible_v<value_type>)
 		: Parent_{}, Value_{ std::forward<U>(value) }, Left_{}, Right_{}, IsMid_{}
 	{
 	}

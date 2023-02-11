@@ -50,7 +50,7 @@ namespace Containers
 			Node* Right_;
 			bool IsMid_;
 			Node();
-			TEM_U Node(U&& value) noexcept(std::is_nothrow_move_constructible_v<value_type>);
+			TEM_U Node(U&& value) noexcept(!std::is_lvalue_reference_v<U>&& std::is_nothrow_move_constructible_v<value_type>);
 		};
 
 		struct ControlBlock
